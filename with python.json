@@ -1,0 +1,88 @@
+{
+  "name": "with python",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1248,
+        -64
+      ],
+      "id": "7e3908f7-9976-4ced-8f1f-0f288caaf401",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "command": "source /Users/nikosmaniatis/Desktop/code/notebooks/.venv/bin/activate && uv run python /Users/nikosmaniatis/Desktop/code/notebooks/rss_script.py"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        -1024,
+        -64
+      ],
+      "id": "3904ad7d-a64e-4f84-b02f-673c13fe2d67",
+      "name": "Execute Command"
+    },
+    {
+      "parameters": {
+        "sendTo": "maniatisni@gmail.com",
+        "subject": "=Daily RSS Digest -  {{ $now.format(\"ccc dd MMM yyyy\") }}",
+        "message": "={{ $json.stdout }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -800,
+        -64
+      ],
+      "id": "142adaff-004b-4734-8ad7-37f9f1878a28",
+      "name": "Send a message",
+      "webhookId": "368fe969-3dce-455f-a39b-31f827deb3ce",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "WdN8FGxIzAIt06uK",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Execute Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Command": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c60b9b52-7e51-4591-9a0c-ae67527b32c0",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2ec38bc862b68d8a3bc9f3deef4de13a48e15cab3c1b2a80bc49f565fc51ddac"
+  },
+  "id": "gRGcaRLizdWodckk",
+  "tags": []
+}

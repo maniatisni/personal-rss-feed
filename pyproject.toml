@@ -1,0 +1,11 @@
+[project]
+name = "personal-rss-feed"
+version = "0.1.0"
+description = "Personal RSS feed aggregator with automated email delivery"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "feedparser>=6.0.11",
+    "requests>=2.31.0",
+    "python-dateutil>=2.8.2",
+]

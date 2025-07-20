@@ -1,0 +1,68 @@
+name: RSS Digest Email
+
+on:
+  schedule:
+    # Run daily at 8:00 AM UTC (adjust timezone as needed)
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  send-rss-digest:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install feedparser requests python-dateutil
+        
+    - name: Generate RSS digest
+      id: generate-digest
+      run: |
+        # Run the RSS aggregator and capture output
+        python rss_aggregator.py > digest.html
+        
+        # Check if digest was generated successfully
+        if [ ! -f digest.html ]; then
+          echo "Failed to generate digest"
+          exit 1
+        fi
+        
+        # Set output for email step
+        echo "digest-generated=true" >> $GITHUB_OUTPUT
+        
+    - name: Send email digest via Mailgun
+      if: steps.generate-digest.outputs.digest-generated == 'true'
+      run: |
+        # Read the HTML content
+        HTML_CONTENT=$(cat digest.html)
+        
+        # Send email via Mailgun API
+        curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
+          https://api.mailgun.net/v3/${{ secrets.MAILGUN_DOMAIN }}/messages \
+          -F from="RSS Digest <rss@${{ secrets.MAILGUN_DOMAIN }}>" \
+          -F to="${{ secrets.EMAIL_TO }}" \
+          -F subject="Daily RSS Digest - $(date +'%Y-%m-%d')" \
+          -F html="$HTML_CONTENT"
+        
+    - name: Get current date
+      id: date
+      run: echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+      
+    - name: Commit updated seen articles
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add seen_articles.json
+        if ! git diff --cached --quiet; then
+          git commit -m "Update seen articles $(date +'%Y-%m-%d')"
+          git push
+        fi
