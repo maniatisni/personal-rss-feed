@@ -1,26 +1,26 @@
 # Personal RSS Feed
 
-Automated personal RSS feed aggregator that collects articles from your favorite sources and delivers them via email using GitHub Actions.
+Automated personal RSS feed aggregator that collects articles from your favorite sources and delivers them via email using GitHub Actions and Mailgun.
 
 ## Features
 
-- =� Aggregates articles from 40+ AI/ML/Tech RSS feeds
-- =� Automated email delivery via GitHub Actions
-- � Configurable scheduling (default: daily at 8 AM UTC)
-- = Tracks seen articles to avoid duplicates
-- =� Clean HTML email format optimized for readability
-- � Easy RSS source management via JSON configuration
+- 📰 Aggregates articles from 40+ AI/ML/Tech RSS feeds
+- 📧 Automated email delivery via Mailgun
+- ⏰ Configurable scheduling (default: daily at 8 AM UTC)
+- 🔄 Tracks seen articles to avoid duplicates
+- 🎨 Clean HTML email format optimized for readability
+- ⚙️ Easy RSS source management via JSON configuration
 
 ## Quick Setup
 
 ### 1. Fork this repository
 
 ### 2. Configure GitHub Secrets
-Go to Settings � Secrets and variables � Actions, and add:
+Go to Settings → Secrets and variables → Actions, and add:
 
-- `EMAIL_USERNAME`: Your Gmail address
-- `EMAIL_PASSWORD`: Your Gmail app password ([setup guide](https://support.google.com/accounts/answer/185833))
-- `EMAIL_TO`: Email address to receive the digest
+- `MAILGUN_API_KEY`: Your Mailgun API key
+- `MAILGUN_DOMAIN`: Your Mailgun domain
+- `EMAIL_RECIPIENTS`: Email address(es) to receive the digest (comma-separated)
 
 ### 3. Enable GitHub Actions
 - Go to Actions tab and enable workflows
