@@ -42,16 +42,13 @@ jobs:
     - name: Send email digest via Mailgun
       if: steps.generate-digest.outputs.digest-generated == 'true'
       run: |
-        # Read the HTML content
-        HTML_CONTENT=$(cat digest.html)
-        
-        # Send email via Mailgun API
-        curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
+        # Send email via Mailgun API using file upload for HTML
+        curl -v --user "api:${{ secrets.MAILGUN_API_KEY }}" \
           https://api.mailgun.net/v3/${{ secrets.MAILGUN_DOMAIN }}/messages \
-          -F from="RSS Digest <rss@${{ secrets.MAILGUN_DOMAIN }}>" \
+          -F from="RSS Digest <postmaster@${{ secrets.MAILGUN_DOMAIN }}>" \
           -F to="${{ secrets.EMAIL_RECIPIENTS }}" \
           -F subject="Daily RSS Digest - $(date +'%Y-%m-%d')" \
-          -F html="$HTML_CONTENT"
+          -F html="<digest.html"
         
     - name: Get current date
       id: date
