@@ -49,7 +49,7 @@ jobs:
         curl -s --user "api:${{ secrets.MAILGUN_API_KEY }}" \
           https://api.mailgun.net/v3/${{ secrets.MAILGUN_DOMAIN }}/messages \
           -F from="RSS Digest <rss@${{ secrets.MAILGUN_DOMAIN }}>" \
-          -F to="${{ secrets.EMAIL_TO }}" \
+          -F to="${{ secrets.EMAIL_RECIPIENTS }}" \
           -F subject="Daily RSS Digest - $(date +'%Y-%m-%d')" \
           -F html="$HTML_CONTENT"
         
